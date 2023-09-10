@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"unicode"
 )
 
 func main() {
@@ -60,7 +61,9 @@ func charCount(data []byte) map[string]int {
 
 	for scanner.Scan() {
 		char := strings.ToLower(scanner.Text())
-		counts[char]++
+		if unicode.IsLetter(rune(char[0])) {
+			counts[char]++
+		}
 	}
 	return counts
 }
