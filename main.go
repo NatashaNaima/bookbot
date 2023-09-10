@@ -41,11 +41,14 @@ func main() {
 		return letterCount[keys[i]] > letterCount[keys[j]]
 	})
 
-	fmt.Println("The number of words is :", wordCount)
+	fmt.Println("--- Begin report of books/frankenstein.txt ---")
+	fmt.Println(wordCount, "words found in this document")
 
 	for _, k := range keys {
-		fmt.Println(k, letterCount[k])
+		fmt.Println("The '", k, "' character was found", letterCount[k], "times")
 	}
+
+	fmt.Println("--- End report ---")
 }
 
 func wordCount(data []byte) int {
