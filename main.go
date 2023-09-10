@@ -1,17 +1,35 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
+	"os"
 )
 
 func main() {
-	content, err := ioutil.ReadFile("books/Frankenstein.txt")
+	content, err := os.Open("books/Frankenstein.txt")
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(string(content))
+	defer content.Close()
+	wordCount := wordCount(content)
+
+	fmt.Println("The number of words is :", wordCount)
+}
+
+func wordCount(text io.Reader) int {
+	count := 0
+
+	scanner := bufio.NewScanner(text)
+	scanner.Split(bufio.ScanWords)
+
+	for scanner.Scan() {
+		count++
+	}
+
+	return count
 }
