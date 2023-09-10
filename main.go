@@ -2,8 +2,8 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"strings"
@@ -17,14 +17,28 @@ func main() {
 	}
 
 	defer content.Close()
-	fmt.Println(charCount(content))
-	wordCount := wordCount(content)
+	// Read the content of the file into memory
+	data := make([]byte, 0)
+	buffer := make([]byte, 1024) // You can adjust the buffer size as needed
 
+	for {
+		n, err := content.Read(buffer)
+		if err != nil && n == 0 {
+			break
+		}
+		data = append(data, buffer[:n]...)
+	}
+
+	fmt.Println(charCount(data))
+
+	wordCount := wordCount(data)
 	fmt.Println("The number of words is :", wordCount)
 }
 
-func wordCount(text io.Reader) int {
+func wordCount(data []byte) int {
 	count := 0
+
+	text := bytes.NewReader(data)
 
 	scanner := bufio.NewScanner(text)
 	scanner.Split(bufio.ScanWords)
@@ -36,8 +50,10 @@ func wordCount(text io.Reader) int {
 	return count
 }
 
-func charCount(text io.Reader) map[string]int {
+func charCount(data []byte) map[string]int {
 	counts := map[string]int{}
+
+	text := bytes.NewReader(data)
 
 	scanner := bufio.NewScanner(text)
 	scanner.Split(bufio.ScanRunes)
