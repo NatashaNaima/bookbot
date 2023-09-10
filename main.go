@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -16,6 +17,7 @@ func main() {
 	}
 
 	defer content.Close()
+	fmt.Println(charCount(content))
 	wordCount := wordCount(content)
 
 	fmt.Println("The number of words is :", wordCount)
@@ -32,4 +34,17 @@ func wordCount(text io.Reader) int {
 	}
 
 	return count
+}
+
+func charCount(text io.Reader) map[string]int {
+	counts := map[string]int{}
+
+	scanner := bufio.NewScanner(text)
+	scanner.Split(bufio.ScanRunes)
+
+	for scanner.Scan() {
+		char := strings.ToLower(scanner.Text())
+		counts[char]++
+	}
+	return counts
 }
