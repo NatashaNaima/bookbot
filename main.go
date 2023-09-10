@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strings"
 	"unicode"
 )
@@ -30,10 +31,21 @@ func main() {
 		data = append(data, buffer[:n]...)
 	}
 
-	fmt.Println(charCount(data))
-
 	wordCount := wordCount(data)
+	letterCount := charCount(data)
+	keys := make([]string, 0, len(letterCount))
+	for k := range letterCount {
+		keys = append(keys, k)
+	}
+	sort.SliceStable(keys, func(i, j int) bool {
+		return letterCount[keys[i]] > letterCount[keys[j]]
+	})
+
 	fmt.Println("The number of words is :", wordCount)
+
+	for _, k := range keys {
+		fmt.Println(k, letterCount[k])
+	}
 }
 
 func wordCount(data []byte) int {
